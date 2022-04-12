@@ -1,0 +1,25 @@
+<section class="register">
+    <div class="h-screen flex flex-col space-y-10 justify-center items-center">
+        <div class="bg-white w-96 shadow-xl rounded p-5">
+          <%if(messages.error){%>
+          <span class="text-sm text-red-500"><%=messages.error%></span>
+          <%}%>
+          <h1 class="text-3xl font-medium">Welcome</h1>
+          <p class="text-sm">Register now!</p>
+          <form action="/register" method="post" class="space-y-5 mt-5">
+            <input type="text" value="<%=messages.name%>" class="w-full h-12 border border-gray-800 rounded px-3" name="name" placeholder="Name" />
+            <input type="email" value="<%=messages.email%>" class="w-full h-12 border border-gray-800 rounded px-3" name="email" placeholder="Email" />
+            <div class="w-full flex items-center border border-gray-800 rounded px-3">
+              <input type="password" class="w-4/5 h-12" name="password" placeholder="Password" />
+              <span class=" rounded-md px-3 login-text">Show</span>
+            </div>
+      
+            <div class="">
+              <a href="/login" class=" login-text font-medium  rounded-md p-2">Already  have an account ?</a>
+            </div>
+      
+            <button class="home_button text-center w-full rounded-md text-white py-3 font-medium">Login</button>
+          </form>
+        </div>
+      </div>
+</section>

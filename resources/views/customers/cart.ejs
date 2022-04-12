@@ -1,0 +1,53 @@
+<section class=" cart  py-8">
+    <% if(!session.cart){%>
+           <div class="empty-cart container mx-auto text-center mt-12">
+                <h3 class="text-bold text-4xl mb-4 ">Cart Empty</h3>
+                 <p class="text-gray-500 text-s">You probably haven't ordered a burger yet.<br>To order a burger go to the main page.</p>
+                 <img class="w-4/12 mx-auto mb-4 mt-4" src="/imgs/emptyy_cartt.svg" alt="">
+                 <a href="/" class="inline-block text-white text-center px-6 py-2 rounded-full btn-primary"><button>Go back</button></a>
+           </div>
+        <%} else {%>
+           <div class="order-list  container mx-auto w-1/2 mt-12 mb-8">
+                   <div class="flex">
+                       <img src="/imgs/cart-black-f.png" alt="">
+                       <h3 class="font-bold text-2xl pt-4 pl-2 mb-4">Order Summary</h3>
+                   </div>
+                   <hr class="hr mt-4">
+                   <div class="burger-list">
+                    <% for(var sess of Object.values(session.cart.items)){%>
+                   <div class="flex items-center mt-8">
+                       <div>
+                           <img src="/imgs/hero_burger.png" class="w-24" alt="">
+                       </div>
+                        <div class="flex-1 p-0">
+                           <h2 class="text-lg font-bold"><%=sess.item.name%></h2>
+                           <span class="text-lg text-gray-500"><%=sess.item.size%></span>
+                        </div>
+                        <span class="flex-1 font-bold text-lg"><%=sess.qty%></span>
+                        <span><%=sess.item.price * sess.qty%></span>
+                    </div>
+                    <%}%>
+                   <hr  class="hr mt-4">
+                   <div class="amount-summary text-right  py-4">
+                       <div>
+                           <span class="text-lg font-bold">Total Amount:</span>
+                           <span class="text-lg font-bold ml-4 amount"><%=session.cart.totalAmt%></span>
+                       </div>
+                       <% if(user){%>
+                       <div class="mt-16">
+                           <form action="/customer/order" method="POST">
+                            <input type="text" name="address" class="border border-gray-400 px-6 py-2 rounded" placeholder="Address"></br>
+                            <input type="text" name="phone" class="border border-gray-400 px-6 py-2 rounded mt-2" placeholder="Phone Number">
+                            <div class="mt-4">
+                                <button  style="background: #890F0D;"class="btn text-white font-bold px-6 py-2 rounded-full" type="submit">Order now</button>
+                            </div>
+                           </form>
+                       </div>
+                       <%} else {%>
+                       <a href="/login" class="btn-primary rounded-full mt-4 inline-block text-sm text-white font-bold px-4 py-2">Login to continue</a>
+                        <%}%>
+                    </div>
+           </div>
+           </div>
+           <%}%>
+</section>

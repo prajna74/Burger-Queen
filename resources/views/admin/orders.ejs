@@ -1,0 +1,70 @@
+<h1 class="mx-auto container font-bold text-xl ">All orders</h1>
+  <div class="container mx-auto">
+      <div class="mx-auto container mt-4">
+          <table class="w-full table-auto bg-white">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 text-left">Orders</th>
+              <th class="px-4 py-2 text-left">Customer</th>
+              <th class="px-4 py-2 text-left">Status</th>
+              <th class="px-4 py-2 text-left">Address</th>
+              <th class="px-4 py-2 text-left">Placed At</th>
+              <th class="px-4 py-2 text-left">Payment status</th>
+            </tr>
+          </thead>
+          <tbody id="orderAdminBody">
+            <%for(var i=0;i<orders.length;i++){%>
+                 <tr>
+                  <td class="border px-4 py-2 text-green-900">
+                    <p><%=orders[i]._id%></p>
+                    <div >
+                      <%Object.values(orders[i].items).forEach(mitem => {%>
+                      <p><%=mitem.item.name%>-<%=mitem.qty%></p>
+                      <%});%>
+                    </div>
+                </td>
+                <td class="border px-4 py-2"><%= orders[i].customerId.name%></td>
+                <td class="border px-4 py-2"><%= orders[i].address %></td>
+                <td class="border px-4 py-2">
+                    <div class="inline-block relative w-64">
+                        <form action="/admin/order/status" method="POST">
+                            <input type="hidden" name="orderId" value="<%=orders[i]._id %>">
+                            <select name="status" onchange="this.form.submit()"
+                                class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="order_placed"
+                                    <%= orders[i].status === 'order_placed' ? 'selected' : ''%>>
+                                    Placed</option>
+                                <option value="confirmed" <%= orders[i].status === 'confirmed' ? 'selected' : '' %>>
+                                    Confirmed</option>
+                                <option value="prepared" <%= orders[i].status === 'prepared' ? 'selected' : ''%>>
+                                    Prepared</option>
+                                <option value="delivered" <%= orders[i].status === 'delivered' ? 'selected' : ''%>>
+                                    Delivered
+                                </option>
+                                <option value="completed" <%= orders[i].status === 'completed' ? 'selected' : ''%>>
+                                    Completed
+                                </option>
+                            </select>
+                        </form>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20">
+                                <path
+                                    d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                            </svg>
+                        </div>
+                    </div>
+                </td>
+                <td class="border px-4 py-2">
+                    <%= moment(orders[i].createdAt).format('hh:mm A')%>
+                </td>
+                <td class="border px-4 py-2">
+                   <%= orders[i].paymentStatus ? 'paid' : 'Not paid' %>
+                </td>
+                 </tr>
+            <%}%>
+          </tbody>
+          </table>
+      </div>
+  </div>
+</section>

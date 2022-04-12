@@ -1,0 +1,36 @@
+<header>
+    <nav class="container mx-auto flex align-center justify-between m-4">
+        <div class="flex">
+            <img src="/imgs/logo1.png" alt="">
+            <h3 class="home_heading ml-4 text-4xl font-bold">Burger Queen</h3>
+        </div>
+        <div >
+            <ul class="flex item-center">
+               
+               <%if(!user){%>
+                <li class="ml-6"><a href="/">Menu</a></li>
+               <li class="ml-6"><a href="">Offers</a></li>
+               <li class="ml-6"><a href="/register">Register</a></li>
+               <li class="ml-6"><a href="/login">Login</a></li>
+               <%} else if(user.user.role=="customer") {%>
+                <li class="ml-6"><a href="#">Hello <%=user.user.name%>!</a></li>
+                <li class="ml-6"><a href="/">Menu</a></li>
+                <li class="ml-6"><a href="">Offers</a></li>
+                <form action="/logout" method="post">
+                <li class="ml-6"><button type="submit">Logout</button></li>
+                </form>
+                <%} else {%>
+                    <li class="ml-6"><a href="#">Hello <%=user.user.name%>!</a></li>
+                    <li class="ml-6"><a href="/">Menu</a></li>
+                    <li class="ml-6"><a href="/admin/orders">Orders</a></li>
+                    <form action="/logout" method="post">
+                    <li class="ml-6"><button type="submit">Logout</button></li>
+                    </form>
+                <%}%>
+               <li class="ml-6"><a href="/cart"  class="inline-block rounded-full flex">
+                   <span id="cartQt" class="text-white font-bold pr-2 pl-2"><%=session.cart?session.cart.totalQt:""%></span>
+                   <img src="/imgs/cart.png" alt=""></a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
