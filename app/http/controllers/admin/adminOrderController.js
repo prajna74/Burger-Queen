@@ -12,6 +12,8 @@ function adminOrderController(){
                const orderid=await orders.findById(req.body.orderId);
                orderid.status=req.body.status;
                await orderid.save().then((result)=>{
+                  const emitter=req.app.get("eventEmitter");
+                  emitter.emit("orderUpdated",{id:orderid._id,status:req.body.status})
                   res.redirect("/admin/orders");
                })           
          }

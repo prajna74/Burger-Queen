@@ -12,12 +12,14 @@ function updateCart(burger)
         cartValue.innerText=cQt;
     });
 }
+if(addbtn){
 addbtn.forEach((addB)=>{
       addB.addEventListener("click",()=>{
           const burger=JSON.parse(addB.dataset.burger);
           updateCart(burger);
       })
 })
+}
 
 const alertMsg=document.getElementById("success-alert");
 if(alertMsg){
@@ -29,10 +31,16 @@ setTimeout(() => {
 let statuses=document.querySelectorAll(".status-line");
 let hiddenInput=document.getElementById("status");
 let order=hiddenInput?hiddenInput.value:"";
+if(order){
 order=JSON.parse(order);
+}
 let timee=document.createElement("small");
 
 function updateStatus(order){
+    statuses.forEach((status)=>{
+        status.classList.remove("completed");
+        status.classList.remove("current");
+    });
     let flag=true;
      statuses.forEach((status)=>{
          let dataProp=status.dataset.status;
@@ -52,3 +60,14 @@ function updateStatus(order){
 }
 
 updateStatus(order);
+
+
+const socket=io();
+if(order){
+    socket.emit("room",`order_${order._id}`);
+}
+
+socket.on("orderstatus",(data)=>{
+    //console.log(data);
+    updateStatus(data);
+})

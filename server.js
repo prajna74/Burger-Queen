@@ -3,6 +3,12 @@ const express=require("express");
 const path=require("path");
 const app=express();
 const ejs=require("ejs");
+const http=require("http");
+const server=http.createServer(app);
+const socketio=require("socket.io");
+const io=new socketio.Server(server);
+const eventEmitter=require("events");
+
 app.set("view engine","ejs");
 const expressLayouts=require("express-ejs-layouts");
 app.use(express.json());
@@ -18,7 +24,7 @@ const mongoose=require("mongoose");
 mongoose.connect("mongodb://localhost/burger_queen");
 const connection=mongoose.connection;
 app.use(session({
-       secret:process.env.COOKIE_SECRET,
+       secret:"helloprajna",
        resave:false,
        store:MongoStore.create({
              mongoUrl:"mongodb://localhost/burger_queen",
@@ -35,21 +41,25 @@ app.use((req,res,next)=>{
     res.locals.user=req.session.user;
     next(); 
 })
-// const passportinit=require("./app/config/passport");
-// passportinit(passport);
-// app.use(passport.initialize());
-// app.use(passport.session());
+
+
 const routes=require("./routes/web");
 routes(app);
 
+const emitter=new eventEmitter();
+app.set("eventEmitter",emitter);
 
-const server=app.listen(process.env.PORT||3000);
+io.on("connection",(socket)=>{
+    socket.on("room",(orderId)=>{
+        socket.join(orderId);
+    })
+})
 
-
-const io=require("socket.io")(server);
-
-io.on("connection",()=>{
-
+emitter.on("orderUpdated",(data)=>{
+    console.log(data);
+    io.to(`order_${data.id}`).emit("orderstatus",data);
 })
 
 
+
+server.listen(3000);

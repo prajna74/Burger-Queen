@@ -2206,12 +2206,15 @@ function updateCart(burger) {
   });
 }
 
-addbtn.forEach(function (addB) {
-  addB.addEventListener("click", function () {
-    var burger = JSON.parse(addB.dataset.burger);
-    updateCart(burger);
+if (addbtn) {
+  addbtn.forEach(function (addB) {
+    addB.addEventListener("click", function () {
+      var burger = JSON.parse(addB.dataset.burger);
+      updateCart(burger);
+    });
   });
-});
+}
+
 var alertMsg = document.getElementById("success-alert");
 
 if (alertMsg) {
@@ -2224,10 +2227,18 @@ if (alertMsg) {
 var statuses = document.querySelectorAll(".status-line");
 var hiddenInput = document.getElementById("status");
 var order = hiddenInput ? hiddenInput.value : "";
-order = JSON.parse(order);
+
+if (order) {
+  order = JSON.parse(order);
+}
+
 var timee = document.createElement("small");
 
 function updateStatus(order) {
+  statuses.forEach(function (status) {
+    status.classList.remove("completed");
+    status.classList.remove("current");
+  });
   var flag = true;
   statuses.forEach(function (status) {
     var dataProp = status.dataset.status;
@@ -2248,6 +2259,16 @@ function updateStatus(order) {
 }
 
 updateStatus(order);
+var socket = io();
+
+if (order) {
+  socket.emit("room", "order_".concat(order._id));
+}
+
+socket.on("orderstatus", function (data) {
+  //console.log(data);
+  updateStatus(data);
+});
 
 /***/ }),
 
